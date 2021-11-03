@@ -1,6 +1,7 @@
 #include "Text2Vec.h"
 #include <iostream>
 
+
 TfidfVectorizer::TfidfVectorizer() : max_features(-1), min_df(-1), analyzer("word"), ngram_range(std::pair<int, int>(1, 1)) {}
 
 std::vector<std::string> TfidfVectorizer::split(const std::string& text, std::vector<std::string> seperators, bool word_unit) {
@@ -10,11 +11,33 @@ std::vector<std::string> TfidfVectorizer::split(const std::string& text, std::ve
     while (i < text.size()) {
         int char_sz = 0;
 
-        if ((text[i] & 0b11111000) == 0b11110000) char_sz = 4;
-        else if ((text[i] & 0b11110000) == 0b11100000) char_sz = 3;
-        else if ((text[i] & 0b11100000) == 0b11000000) char_sz = 2;
+        if ((text[i] & 0b11111000) == 0b11110000) {
+            if (i+3 < text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000 && (text[i+3] & 0b11000000) == 0b10000000)
+                char_sz = 4;
+            else {
+                i++; continue;
+            }
+        }
+        else if ((text[i] & 0b11110000) == 0b11100000) {
+            if (i+2 < text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000)
+                char_sz = 3;    
+            else {
+                i++; continue;
+            }
+        }
+        else if ((text[i] & 0b11100000) == 0b11000000) {
+            if (i+1 < text.size() && (text[i+1] & 0b11000000) == 0b10000000)
+                char_sz = 2;
+            else {
+                i++;
+                continue;
+            }
+        }
         else if ((text[i] & 0b10000000) == 0b00000000) char_sz = 1;
-        else return {}; //not used
+        else {
+            std::cout << short(text[i]) << '\n';
+            i++; continue;
+        }
 
         std::string str = text.substr(i, char_sz);
         i += char_sz;
@@ -55,5 +78,30 @@ void TfidfVectorizer::set_configs(const std::vector<std::pair<std::string, std::
             ngram_range.first = stoi(range[0]);
             ngram_range.second = stoi(range[1]);
         }
+    }
+}
+
+void TfidfVectorizer::fit(const std::vector<std::string>& text_list) {
+    std::string punctuation = u8"!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n"; //¡Ú¢º¡º¡»¡¶¡·
+    std::vector<std::string> punc_vec = split(punctuation, {}, false);
+    for (std::string i : punc_vec) std::cout<< i << ' ';
+    std::cout<<'\n';
+    bool word_unit = 1;
+    if (analyzer == "char") word_unit = 0;
+    for (const std::string& text : text_list) {
+        std::vector<std::string> parsed_text = split(text, punc_vec, word_unit);
+        std::map<std::string, int> word_count;
+        for (int ngram = ngram_range.first; ngram <= ngram_range.second; ngram++) {
+            for (int i = 0; i < parsed_text.size() - ngram + 1; i++) {
+                std::string word;
+                for (int j = 0; j < ngram; j++) {
+                    word += parsed_text[i + j];
+                    if (j != ngram - 1) word += u8" ";
+                }
+                word_count[word]++;
+                df[word]++;
+            }
+        }
+        tf.push_back(word_count);
     }
 }
