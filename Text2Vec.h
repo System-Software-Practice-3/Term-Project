@@ -9,13 +9,17 @@
 class TfidfVectorizer {
 private: 
     int max_features;
+    int min_df;
+    std::pair<int, int> ngram_range;
+    std::string analyzer; //word, char
     std::map<std::string, int> df;
-    std::vector<std::map<std::string, int>> tfidf;
+    std::vector<std::map<std::string, int>> tf;
 
 public:
     TfidfVectorizer();
-    TfidfVectorizer(int _max_features = -1);
-    std::vector<std::string> split(const std::string& text);
+    TfidfVectorizer(int _max_features);
+    std::vector<std::string> split(const std::string& text, std::vector<std::string> seperators, bool word_unit=true);
+    void set_configs(const std::vector<std::pair<std::string, std::string>>& config);
     void fit(const std::vector<std::string>& text_list);
     std::vector<std::vector<double>> transform();
 };
