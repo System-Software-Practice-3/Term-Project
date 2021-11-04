@@ -5,6 +5,8 @@
 #include <vector>
 #include <utility>
 #include <map>
+#include <set>
+#include <queue>
 
 class TfidfVectorizer {
 private: 

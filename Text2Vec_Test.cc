@@ -5,6 +5,7 @@ using namespace std;
 
 int main(){
     // Text2Vec_Test.cc file should be encoded by utf-8
+    // C++11
     string text = u8"이 글은 ★Test★를 위한 글입니다. 잘 읽힐까요?";
     cout << text << '\n';
 

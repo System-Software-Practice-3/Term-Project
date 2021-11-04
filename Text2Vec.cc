@@ -82,7 +82,7 @@ void TfidfVectorizer::set_configs(const std::vector<std::pair<std::string, std::
 }
 
 void TfidfVectorizer::fit(const std::vector<std::string>& text_list) {
-    std::string punctuation = u8"!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n"; //¡Ú¢º¡º¡»¡¶¡·
+    std::string punctuation = u8"!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n";
     std::vector<std::string> punc_vec = split(punctuation, {}, false);
     for (std::string i : punc_vec) std::cout<< i << ' ';
     std::cout<<'\n';
@@ -103,5 +103,28 @@ void TfidfVectorizer::fit(const std::vector<std::string>& text_list) {
             }
         }
         tf.push_back(word_count);
+    }
+    if (min_df != -1) {
+        std::set<std::string> st;
+        for (auto i : df) if (i.second < min_df) st.insert(i.first);
+        for (auto i : st) df.erase(i);
+        for (int i = 0; i < tf.size(); i++) {
+            for (auto j : st) if (tf[i].find(j) != tf[i].end()) tf[i].erase(j);
+        }
+    }
+    if (max_features != -1) {
+        std::priority_queue<std::pair<int, std::string>> pq;
+        for (auto i : df) {
+            pq.push({i.second, i.first});
+            if (pq.size() > max_features) pq.pop();
+        }
+        df.clear();
+        while(pq.size()) {
+            auto i = pq.top(); pq.pop();
+            df[i.second] = i.first;
+        }
+        for (int i = 0; i < tf.size(); i++) {
+            for (auto j : df) if (tf[i].find(j.first) != tf[i].end()) tf[i].erase(j.first);
+        }
     }
 }
