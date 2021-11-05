@@ -35,7 +35,6 @@ std::vector<std::string> TfidfVectorizer::split(const std::string& text, std::ve
         }
         else if ((text[i] & 0b10000000) == 0b00000000) char_sz = 1;
         else {
-            std::cout << short(text[i]) << '\n';
             i++; continue;
         }
 
@@ -84,8 +83,6 @@ void TfidfVectorizer::set_configs(const std::vector<std::pair<std::string, std::
 void TfidfVectorizer::fit(const std::vector<std::string>& text_list) {
     std::string punctuation = u8"!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n";
     std::vector<std::string> punc_vec = split(punctuation, {}, false);
-    for (std::string i : punc_vec) std::cout<< i << ' ';
-    std::cout<<'\n';
     bool word_unit = 1;
     if (analyzer == "char") word_unit = 0;
     for (const std::string& text : text_list) {
@@ -127,4 +124,28 @@ void TfidfVectorizer::fit(const std::vector<std::string>& text_list) {
             for (auto j : df) if (tf[i].find(j.first) != tf[i].end()) tf[i].erase(j.first);
         }
     }
+}
+
+std::vector<std::vector<double>> TfidfVectorizer::transform() {
+    std::vector<std::vector<double>> ret;
+    for (int i = 0; i < tf.size(); i++) {
+        std::vector<double> tmp;
+        for (auto j : df) {
+            if (tf[i].find(j.first) == tf[i].end()) tmp.push_back(0);
+            else {
+                double idf = log((double)tf.size() / (j.second + 1));
+                tmp.push_back(tf[i][j.first] * idf);
+            }
+        }
+        ret.push_back(tmp);
+    }
+    return ret;
+}
+
+std::map<std::string, int> TfidfVectorizer::get_df() const {
+    return df;
+}
+
+std::vector<std::map<std::string, int>> TfidfVectorizer::get_tf() const {
+    return tf;
 }

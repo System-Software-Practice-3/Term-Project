@@ -16,9 +16,18 @@ int main(){
     for (string i : v2) cout << i << ' ';
     cout<<'\n';
 
-    tfidf.set_configs({{"ngram_range", "{1, 2}"}});
+    // tfidf.set_configs({{"ngram_range", "{1, 2}"}});
     string textli[4] = {u8"먹고 싶은 <사과>", u8"먹고~ 싶은 바나나", u8"길고 노란 바나나, 바나나", u8"저는 과일이 좋아요!"};
     vector<string> text_list;
     for (int i = 0; i < 4; i++) text_list.push_back(textli[i]);
     tfidf.fit(text_list);
+    
+    vector<vector<double>> text_vec = tfidf.transform();
+    map<string, int> df = tfidf.get_df();
+    for (auto i : df) cout << i.first << ' ';
+    cout<<'\n';
+    for (auto i : text_vec) {
+        for (double j : i) cout << j << ' ';
+        cout<<'\n';
+    }
 }

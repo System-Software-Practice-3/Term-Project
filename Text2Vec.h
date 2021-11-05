@@ -7,9 +7,10 @@
 #include <map>
 #include <set>
 #include <queue>
+#include <cmath>
 
 class TfidfVectorizer {
-private: 
+private:
     int max_features;
     int min_df;
     std::pair<int, int> ngram_range;
@@ -24,6 +25,8 @@ public:
     void set_configs(const std::vector<std::pair<std::string, std::string>>& config);
     void fit(const std::vector<std::string>& text_list);
     std::vector<std::vector<double>> transform();
+    std::map<std::string, int> get_df() const;
+    std::vector<std::map<std::string, int>> get_tf() const;
 };
 
 class Text2Vec {
