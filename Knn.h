@@ -17,7 +17,7 @@ class Knn {
         int get_dim();
         void set_dim(int dim);
         std::string get_metric();
-        void set_metric();
+        void set_metric(std::string met);
 
         double distance(std::vector<double> v1, std::vector<double> v2, std::string met);
 
@@ -26,7 +26,6 @@ class Knn {
         void SearchByVector(const std::vector<double> target, int k, vector<int> &result); //function that search the nearest k vectors. it returns vectors' id.
         void SearchByVector(const int target, int k, vector<int> &result); //function that search the nearest k vectors. it returns vectors' id.
 
-        void Clear(); //function that remove all data in object.
 };
 
 #endif
