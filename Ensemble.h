@@ -4,15 +4,15 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <map>
+#include <algorithm>
 
 
 class Ensemble {
 private:
     std::vector<std::vector<int>> ranking_list;
     std::vector<std::vector<std::pair<int, double>>> ranking_list_with_weight;
-    void RankFusion(std::vector<int>& result);
-    void Hard_Voting(std::vector<int>& result);
-    void Soft_Voting(std::vector<int>& result);
+    void ReciprocalRankFusion(int k, std::vector<int>& result);
 
 public:
     Ensemble();
