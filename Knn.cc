@@ -113,8 +113,8 @@ double Knn::distance(std::set<std::string> s1, std::set<std::string> s2, std::st
             }
         }
 
-        result = static_cast<double>(intersection/(s1.size() + s2.size() - intersection));
-        
+        result = 1 - static_cast<double>(intersection)/(s1.size() + s2.size() - intersection);
+
         return result;
     }
 }

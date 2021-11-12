@@ -6,6 +6,7 @@
 
 int main(void){
     //double test
+  /*
     Knn double_test(3, "Euclidean");
 
     std::vector<double> test_vec;
@@ -58,12 +59,62 @@ int main(void){
     for(size_t i=0;i<2;i++){
         std::cout << "ID : " << ret.at(i).first << " distance : " << ret.at(i).second << std::endl;
     }
-
+*/
 
 
     //string test
+
+    Knn string_test(3, "Jaccard");
+
+    std::set<std::string> test_set;
+    std::vector<std::pair<int, double>> ret;
+
+    test_set.clear();
+    test_set.insert("apple");
+    test_set.insert("pear");
+    test_set.insert("grape");
+
+    std::cout<< "input set1 : apple pear grape" << std::endl;
+
+    string_test.AddData(test_set);
     
+    test_set.clear();
+    test_set.insert("apple");
+    test_set.insert("blueberry");
+    test_set.insert("melon");
 
+    std::cout<< "input set2 : apple blueberry melon" << std::endl;
 
+    string_test.AddData(test_set);
+
+    test_set.clear();
+    test_set.insert("pear");
+    test_set.insert("grape");
+    test_set.insert("melon");
+
+    std::cout << "input set3 : pear grape melon" << std::endl;
+
+    string_test.AddData(test_set);
+
+    test_set.clear();
+    test_set.insert("blueberry");
+    test_set.insert("grape");
+    test_set.insert("melon");
+
+    std::cout << "search by set : blueberry grape melon" << std::endl;
+
+    string_test.SearchByVector(test_set, 2, ret);
+
+    for(size_t i =0;i<2;i++){
+        std::cout << "ID : " << ret.at(i).first << " distance : " << ret.at(i).second << std::endl;
+    }
+
+    std::cout << "search by ID : 1" << std::endl;
+
+    string_test.SearchById(1, 2, 1, ret);
+
+    for(size_t i=0;i<2;i++){
+        std::cout << "ID : " << ret.at(i).first << " distance : " << ret.at(i).second << std::endl;
+    }
 
 }
