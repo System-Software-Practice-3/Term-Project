@@ -12,11 +12,10 @@ img2RGB::img2RGB(std::string str){
     book_name = tmp_bookname;
 }
 
+img2RGB::img2RGB(cv::Mat mat){
+    FIRST_IMG = mat;
+}
 
-void img2RGB::RESIZE(int row, int col){
-    cv::Mat dst;
-    this->row =row;
-    this->col = col;
-    resize(FIRST_IMG,dst,cv::Size(row,col));
-    FIRST_IMG = dst;
+cv::Mat img2RGB::get_img(){
+    return FIRST_IMG;
 }

@@ -6,7 +6,7 @@
 #include <ctime>
 
 cv::Mat kmeans_clustering(cv::Mat input_matrix, int Numofcluster, int withinDistance);
-
+//kmeans_compare func
 #endif
 
 
