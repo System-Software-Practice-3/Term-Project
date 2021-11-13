@@ -29,7 +29,7 @@ public:
     std::vector<std::map<std::string, int>> get_tf() const;
 };
 
-class Text2Vec {
+class TextRec {
 private:
     std::vector<std::string> text_list;
     std::vector<std::vector<double>> vectorized_text_list;
@@ -37,7 +37,9 @@ private:
 public:
     void AddData(const std::string& text);
     void Build(std::string policy="tf-idf");
-    void GetVectorById(int id, std::vector<double>& result) const;
+    void SetConfig(const std::vector<std::pair<std::string, std::string>>& config);
+    void GetRankingList(int id, std::vector<int>& result);
+    void GetRankingList(int id, std::vector<std::pair<int, double>>& result);
 };
 
 #endif
