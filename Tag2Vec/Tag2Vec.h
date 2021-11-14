@@ -4,20 +4,24 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <set>
 
-class Tag2Vec {
-    private:
-        std::vector<std::string> tag_list;
-        std::vector<std::vector<double>> tag_table;
-    public:
-        Tag2Vec();
-        //inherited split function
+namespace cbr{
+    class Tag2Vec {
+        private:
+            std::set<std::string> tag_list;
+            std::vector<std::set<std::string>> tag_table;
+        public:
+            Tag2Vec();
+            //inherited split function
 
-        void AddData(const std::vector<std::string> data);
+            void AddData(const std::set<std::string> data);
 
-        std::vector<std::vector<double>> GetTable();
-        std::vector<double> GetVectorById(int id);
-        std::vector<std::string> GetTagList();
-};
+            std::vector<std::set<std::string>> GetTable();
+            std::set<std::string> GetVectorById(int id);
+            std::set<std::string> GetTagList();
+            std::set<std::string> split(const std::string& text);
+    };
+}
 
 #endif

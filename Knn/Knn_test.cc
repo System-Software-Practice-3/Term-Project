@@ -64,6 +64,8 @@ int main(void){
 
     //string test
 
+    using namespace cbr;
+
     Knn string_test(3, "Jaccard");
 
     std::set<std::string> test_set;
