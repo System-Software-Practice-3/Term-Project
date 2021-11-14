@@ -11,6 +11,7 @@
 #include <kiwi/Utils.h>
 #include <kiwi/Kiwi.h>
 
+#include "Knn.h"
 
 namespace cbr {
     const std::string MODEL_PATH = "../Kiwi/ModelGenerator";
@@ -43,14 +44,17 @@ namespace cbr {
     private:
         std::vector<std::u16string> text_list;
         std::vector<std::vector<double>> vectorized_text_list;
+        std::vector<std::pair<std::string, std::string>> configs;
+        std::string policy;
 
     public:
         void AddData(const std::string& text);
         void AddData(const std::u16string& text);
         void Build(std::string policy="tf-idf");
         void SetConfig(const std::vector<std::pair<std::string, std::string>>& config);
-        void GetRankingList(int id, std::vector<int>& result);
-        void GetRankingList(int id, std::vector<std::pair<int, double>>& result);
+        void ReSetConfig();
+        void GetRankingList(int id, int k, std::vector<int>& result);
+        void GetRankingList(int id, int k, std::vector<std::pair<int, double>>& result);
     };
 }
 

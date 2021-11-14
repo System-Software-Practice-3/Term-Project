@@ -35,4 +35,15 @@ int main(){
         for (double j : i) cout << j << ' ';
         cout<<'\n';
     }
+
+    vector<u16string> text_list2{u"사과나 바나나를 먹고 싶다", u"사과는 싫지만 복숭아는 좋다", u"노는게 제일 좋아 친구들 모여라", u"배고파서 아무거나 먹고 싶다"};
+    cbr::TextRec tr;
+    for (auto i : text_list2) tr.AddData(i);
+    tr.Build();
+    vector<pair<int, double>> result;
+    tr.GetRankingList(0, 3, result);
+    cout << kiwi::utf16To8(text_list2[0]) << " is similar to...\n";
+    for (int i = 0; i < result.size(); i++) {
+        cout << (i + 1) << ' ' << kiwi::utf16To8(text_list2[result[i].first]) << ", score : " << result[i].second << '\n';
+    }
 }
