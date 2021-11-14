@@ -182,6 +182,14 @@ void cbr::TfidfVectorizer::fit(const std::vector<std::u16string>& text_list) {
     }
 }
 
+void cbr::TfidfVectorizer::fit(const std::vector<std::string>& text_list) {
+    std::vector<std::u16string> text_list_u16;
+    for (auto &s: text_list) {
+        text_list_u16.push_back(kiwi::utf8To16(s));
+    }
+    fit(text_list_u16);
+}
+
 std::vector<std::vector<double>> cbr::TfidfVectorizer::transform() {
     std::vector<std::vector<double>> ret;
     for (int i = 0; i < tf.size(); i++) {

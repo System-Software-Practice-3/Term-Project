@@ -33,6 +33,7 @@ namespace cbr {
 
         void set_configs(const std::vector<std::pair<std::string, std::string>>& config);
         void fit(const std::vector<std::u16string>& text_list);
+        void fit(const std::vector<std::string>& text_list);
         std::vector<std::vector<double>> transform();
         std::map<std::u16string, int> get_df() const;
         std::vector<std::map<std::u16string, int>> get_tf() const;
@@ -45,6 +46,7 @@ namespace cbr {
 
     public:
         void AddData(const std::string& text);
+        void AddData(const std::u16string& text);
         void Build(std::string policy="tf-idf");
         void SetConfig(const std::vector<std::pair<std::string, std::string>>& config);
         void GetRankingList(int id, std::vector<int>& result);
