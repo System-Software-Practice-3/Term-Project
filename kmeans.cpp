@@ -1,4 +1,5 @@
 #include "kmeans.h"
+#include "image2vec.h"
 #include <algorithm>
 #include <iostream>
 
@@ -170,5 +171,137 @@ cv::Mat kmeans_clustering(cv::Mat input_matrix, int Numofcluster, int withinDist
             ret.data[Cluster[i][j]*3+2] = centers[i].z;
         }
     }
+    return ret;
+}
+
+
+struct color_ratio{
+    int r=-1,g=-1,b=-1;
+    int count = 0;
+    double ratio;
+};
+
+
+
+double compare_two_img(cv::Mat mat1,cv::Mat mat2,int Numofcluster){
+    int len1 = mat1.rows*mat1.cols;
+    int len2 = mat2.rows*mat2.cols;
+    struct color_ratio Mat1_ratio[Numofcluster];
+    struct color_ratio Mat2_ratio[Numofcluster];
+    double ret = 0;
+
+    for (int i = 0; i < len1; i++){
+        for (int j = 0; j < Numofcluster; j++){
+            if(Mat1_ratio[j].r == -1){
+                Mat1_ratio[j].r = mat1.at<cv::Vec3b>(i)[2];
+                Mat1_ratio[j].g = mat1.at<cv::Vec3b>(i)[1];
+                Mat1_ratio[j].b = mat1.at<cv::Vec3b>(i)[0];
+                Mat1_ratio[j].count++;
+                break;
+            }
+            else{
+                if((Mat1_ratio[j].r ==  mat1.at<cv::Vec3b>(i)[2]) && (Mat1_ratio[j].g ==  mat1.at<cv::Vec3b>(i)[1]) && (Mat1_ratio[j].b ==  mat1.at<cv::Vec3b>(i)[0])){
+                    Mat1_ratio[j].count++;
+                    break;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < len2; i++){
+        for (int j = 0; j < Numofcluster; j++){
+            if(Mat2_ratio[j].r == -1){
+                Mat2_ratio[j].r = mat2.at<cv::Vec3b>(i)[2];
+                Mat2_ratio[j].g = mat2.at<cv::Vec3b>(i)[1];
+                Mat2_ratio[j].b = mat2.at<cv::Vec3b>(i)[0];
+                Mat2_ratio[j].count++;
+                break;
+            }
+            else{
+                if((Mat2_ratio[j].r ==  mat2.at<cv::Vec3b>(i)[2]) && (Mat2_ratio[j].g ==  mat2.at<cv::Vec3b>(i)[1]) && (Mat2_ratio[j].b ==  mat2.at<cv::Vec3b>(i)[0])){
+                    Mat2_ratio[j].count++;
+                    break;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < Numofcluster; i++){
+        Mat1_ratio[i].ratio = (double)Mat1_ratio[i].count/len1;
+        Mat2_ratio[i].ratio = (double)Mat2_ratio[i].count/len2;
+    }
+
+//choose one mat and compare.. loop length is numofcluster.
+    for (int i = 0; i < Numofcluster; i++){
+        int close_idx = -1;
+        double close_val = 0x7fffffff;
+        for (int j = 0; j < Numofcluster; j++){
+            if(Mat2_ratio[j].ratio <= 0) continue;
+            if(std::pow(Mat1_ratio[i].r-Mat2_ratio[j].r,2)+std::pow(Mat1_ratio[i].g-Mat2_ratio[j].g,2)+std::pow(Mat1_ratio[i].b-Mat2_ratio[j].b,2) < close_val){
+                close_val = std::pow(Mat1_ratio[i].r-Mat2_ratio[j].r,2)+std::pow(Mat1_ratio[i].g-Mat2_ratio[j].g,2)+std::pow(Mat1_ratio[i].b-Mat2_ratio[j].b,2);
+                close_idx = j;
+               // break;
+            }
+        }
+
+        if(Mat1_ratio[i].ratio > Mat2_ratio[close_idx].ratio){
+        //    std::cout << Mat1_ratio[i].ratio << ' ' << Mat2_ratio[close_idx].ratio << std::endl;
+            ret += std::sqrt(close_val) * Mat2_ratio[close_idx].ratio;
+
+
+            Mat1_ratio[i].ratio -= Mat2_ratio[close_idx].ratio;
+            Mat2_ratio[close_idx].ratio = 0;
+            i--;
+            if(Mat1_ratio[i].ratio < 0.0000001){
+                Mat1_ratio[i].ratio=0;
+                i++;
+            }
+        }
+        else{
+            ret += std::sqrt(close_val) * Mat1_ratio[i].ratio;
+
+            Mat2_ratio[close_idx].ratio -= Mat1_ratio[i].ratio;
+            Mat1_ratio[i].ratio = 0;
+            if(Mat2_ratio[close_idx].ratio < 0.0000001){
+                Mat2_ratio[close_idx].ratio=0;
+                //i++;
+            }
+        }
+      //  std::cout << i << ' ' << Numofcluster << std::endl;
+    }
+    return ret;
+}
+
+//cv::Mat kmeans_clustering(cv::Mat input_matrix, int Numofcluster, int withinDistance);
+std::vector<img2RGB> kmeans_similarity(img2RGB input,std::vector<img2RGB> stored_picture,int number_of_cluster,int withinDistance, int choose_num){
+    int len = stored_picture.size();
+    std::vector <double> similar;
+
+    for (int i = 0; i < len; i++){
+        similar.push_back(compare_two_img(kmeans_clustering(input.get_img(),number_of_cluster,withinDistance),
+        kmeans_clustering(stored_picture[i].get_img(),number_of_cluster,withinDistance),
+        number_of_cluster));
+    }
+
+    //sorting asc (more similar close to zero)
+    for (int i = 0; i < len-1; i++){
+        for (int j = 0; j < len-1-i;j++){
+            if(similar[j] > similar[j+1]){
+                double num_tmp = similar[j];
+                img2RGB RGB_tmp = stored_picture[j];
+
+                similar[j] = similar[j+1];
+                similar[j+1] = num_tmp;
+
+                stored_picture[j] = stored_picture[j+1];
+                stored_picture[j+1] = RGB_tmp;
+            }
+        }
+    }
+    std::vector<img2RGB> ret;
+    if(choose_num > len) choose_num = len;
+    for (int i = 0; i < choose_num; i++){
+        ret.push_back(stored_picture[i]);
+    }
+
     return ret;
 }

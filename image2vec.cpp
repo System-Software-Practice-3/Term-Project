@@ -1,5 +1,8 @@
 #include "image2vec.h"
 
+img2RGB::img2RGB(){
+}
+
 img2RGB::img2RGB(std::string str){
     FIRST_IMG = cv::imread(str,cv::IMREAD_COLOR);
     int len = str.length();
@@ -18,4 +21,13 @@ img2RGB::img2RGB(cv::Mat mat){
 
 cv::Mat img2RGB::get_img(){
     return FIRST_IMG;
+}
+
+void img2RGB::operator=(img2RGB rhs){
+    this->FIRST_IMG = rhs.FIRST_IMG;
+    this->book_name = rhs.book_name;
+}
+
+std::string img2RGB::get_bookname(){
+    return this->book_name;
 }
