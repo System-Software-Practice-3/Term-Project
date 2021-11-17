@@ -214,22 +214,6 @@ std::vector<std::map<std::u16string, int>> cbr::TfidfVectorizer::get_tf() const 
     return tf;
 }
 
-
-    // class TextRec {
-    // private:
-    //     std::vector<std::u16string> text_list;
-    //     std::vector<std::vector<double>> vectorized_text_list;
-    //     std::vector<std::pair<std::string, std::string>> configs;
-
-    // public:
-    //     void AddData(const std::string& text);
-    //     void AddData(const std::u16string& text);
-    //     void Build(std::string policy="tf-idf");
-    //     void SetConfig(const std::vector<std::pair<std::string, std::string>>& config);
-    //     void GetRankingList(int id, std::vector<int>& result);
-    //     void GetRankingList(int id, std::vector<std::pair<int, double>>& result);
-    // };
-
 void cbr::TextRec::AddData(const std::string& text) {
     text_list.push_back(kiwi::utf8To16(text));
 }
@@ -245,6 +229,16 @@ void cbr::TextRec::Build(std::string _policy) {
         tfidf.set_configs(configs);
         tfidf.fit(text_list);
         vectorized_text_list = tfidf.transform();
+    } else if (_policy == "jaccard") {
+        TfidfVectorizer tfidf;
+        tfidf.set_configs(configs);
+        tfidf.fit(text_list);
+        auto tf = tfidf.get_tf();
+        for (const auto& i : tf) {
+            std::set<std::string> tmp_st;
+            for (const auto& j : i) tmp_st.insert(kiwi::utf16To8(j.first));
+            text_set_list.push_back(tmp_st);
+        }
     }
 }
 
@@ -256,12 +250,24 @@ void cbr::TextRec::ReSetConfig() {
     configs.clear();
 }
 
+void cbr::TextRec::ResetData() {
+    text_list.clear();
+    vectorized_text_list.clear();
+    text_set_list.clear();
+}
+
 void cbr::TextRec::GetRankingList(int id, int k, std::vector<int>& result) {
     if (policy == "tf-idf") {
         Knn knn(vectorized_text_list[0].size(), "Cosine");
         for (auto i : vectorized_text_list) knn.AddData(i);
         std::vector<std::pair<int, double>> knn_res;
         knn.SearchById(id, k, 0, knn_res);
+        for (auto i : knn_res) result.push_back(i.first);
+    } else if (policy == "jaccard") {
+        Knn knn(1, "Jaccard");
+        for (auto i : text_set_list) knn.AddData(i);
+        std::vector<std::pair<int, double>> knn_res;
+        knn.SearchById(id, k, 1, knn_res);
         for (auto i : knn_res) result.push_back(i.first);
     }
 }
@@ -271,5 +277,9 @@ void cbr::TextRec::GetRankingList(int id, int k, std::vector<std::pair<int, doub
         Knn knn(vectorized_text_list[0].size(), "Cosine");
         for (auto i : vectorized_text_list) knn.AddData(i);
         knn.SearchById(id, k, 0, result);
+    } else if (policy == "jaccard") {
+        Knn knn(1, "Jaccard");
+        for (auto i : text_set_list) knn.AddData(i);
+        knn.SearchById(id, k, 1, result);
     }
 }

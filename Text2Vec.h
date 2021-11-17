@@ -8,6 +8,7 @@
 #include <set>
 #include <queue>
 #include <cmath>
+
 #include <kiwi/Utils.h>
 #include <kiwi/Kiwi.h>
 
@@ -44,6 +45,7 @@ namespace cbr {
     private:
         std::vector<std::u16string> text_list;
         std::vector<std::vector<double>> vectorized_text_list;
+        std::vector<std::set<std::string>> text_set_list; //for jaccard similarity
         std::vector<std::pair<std::string, std::string>> configs;
         std::string policy;
 
@@ -53,6 +55,7 @@ namespace cbr {
         void Build(std::string policy="tf-idf");
         void SetConfig(const std::vector<std::pair<std::string, std::string>>& config);
         void ReSetConfig();
+        void ResetData();
         void GetRankingList(int id, int k, std::vector<int>& result);
         void GetRankingList(int id, int k, std::vector<std::pair<int, double>>& result);
     };
