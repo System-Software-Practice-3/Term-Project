@@ -8,25 +8,25 @@ std::vector<std::string> cbr::split(const std::string& text, std::vector<std::st
     std::vector<std::string> ret;
     std::string tmp;
     int i = 0;
-    while (i < text.size()) {
+    while (i < (int)text.size()) {
         int char_sz = 0;
 
         if ((text[i] & 0b11111000) == 0b11110000) {
-            if (i+3 < text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000 && (text[i+3] & 0b11000000) == 0b10000000)
+            if (i+3 < (int)text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000 && (text[i+3] & 0b11000000) == 0b10000000)
                 char_sz = 4;
             else {
                 i++; continue;
             }
         }
         else if ((text[i] & 0b11110000) == 0b11100000) {
-            if (i+2 < text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000)
+            if (i+2 < (int)text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000)
                 char_sz = 3;    
             else {
                 i++; continue;
             }
         }
         else if ((text[i] & 0b11100000) == 0b11000000) {
-            if (i+1 < text.size() && (text[i+1] & 0b11000000) == 0b10000000)
+            if (i+1 < (int)text.size() && (text[i+1] & 0b11000000) == 0b10000000)
                 char_sz = 2;
             else {
                 i++;
@@ -71,25 +71,25 @@ std::u16string cbr::filter(const std::u16string& s, const std::vector<std::strin
     std::string text = kiwi::utf16To8(s);
     std::string ret, tmp;
     int i = 0;
-    while (i < text.size()) {
+    while (i < (int)text.size()) {
         int char_sz = 0;
 
         if ((text[i] & 0b11111000) == 0b11110000) {
-            if (i+3 < text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000 && (text[i+3] & 0b11000000) == 0b10000000)
+            if (i+3 < (int)text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000 && (text[i+3] & 0b11000000) == 0b10000000)
                 char_sz = 4;
             else {
                 i++; continue;
             }
         }
         else if ((text[i] & 0b11110000) == 0b11100000) {
-            if (i+2 < text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000)
+            if (i+2 < (int)text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000)
                 char_sz = 3;    
             else {
                 i++; continue;
             }
         }
         else if ((text[i] & 0b11100000) == 0b11000000) {
-            if (i+1 < text.size() && (text[i+1] & 0b11000000) == 0b10000000)
+            if (i+1 < (int)text.size() && (text[i+1] & 0b11000000) == 0b10000000)
                 char_sz = 2;
             else {
                 i++;
@@ -145,7 +145,7 @@ void cbr::TfidfVectorizer::fit(const std::vector<std::u16string>& text_list) {
         auto parsed_text = kiwi.analyze(filtered_text, kiwi::Match::all).first;
         std::map<std::u16string, int> word_count;
         for (int ngram = ngram_range.first; ngram <= ngram_range.second; ngram++) {
-            for (int i = 0; i < parsed_text.size() - ngram + 1; i++) {
+            for (int i = 0; i < (int)parsed_text.size() - ngram + 1; i++) {
                 std::u16string word;
                 for (int j = 0; j < ngram; j++) {
                     word += parsed_text[i + j].str;
@@ -161,7 +161,7 @@ void cbr::TfidfVectorizer::fit(const std::vector<std::u16string>& text_list) {
         std::set<std::u16string> st;
         for (auto i : df) if (i.second < min_df) st.insert(i.first);
         for (auto i : st) df.erase(i);
-        for (int i = 0; i < tf.size(); i++) {
+        for (int i = 0; i < (int)tf.size(); i++) {
             for (auto j : st) if (tf[i].find(j) != tf[i].end()) tf[i].erase(j);
         }
     }
@@ -169,14 +169,14 @@ void cbr::TfidfVectorizer::fit(const std::vector<std::u16string>& text_list) {
         std::priority_queue<std::pair<int, std::u16string>> pq;
         for (auto i : df) {
             pq.push({i.second, i.first});
-            if (pq.size() > max_features) pq.pop();
+            if ((int)pq.size() > max_features) pq.pop();
         }
         df.clear();
         while(pq.size()) {
             auto i = pq.top(); pq.pop();
             df[i.second] = i.first;
         }
-        for (int i = 0; i < tf.size(); i++) {
+        for (int i = 0; i < (int)tf.size(); i++) {
             for (auto j : df) if (tf[i].find(j.first) != tf[i].end()) tf[i].erase(j.first);
         }
     }
@@ -192,7 +192,7 @@ void cbr::TfidfVectorizer::fit(const std::vector<std::string>& text_list) {
 
 std::vector<std::vector<double>> cbr::TfidfVectorizer::transform() {
     std::vector<std::vector<double>> ret;
-    for (int i = 0; i < tf.size(); i++) {
+    for (int i = 0; i < (int)tf.size(); i++) {
         std::vector<double> tmp;
         for (auto j : df) {
             if (tf[i].find(j.first) == tf[i].end()) tmp.push_back(0);
@@ -246,7 +246,7 @@ void cbr::TextRec::SetConfig(const std::vector<std::pair<std::string, std::strin
     for (auto i : config) configs.push_back(i);
 }
 
-void cbr::TextRec::ReSetConfig() {
+void cbr::TextRec::ResetConfig() {
     configs.clear();
 }
 

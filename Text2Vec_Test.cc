@@ -45,7 +45,7 @@ int main(){
     vector<pair<int, double>> result;
     tr.GetRankingList(0, 3, result);
     cout << kiwi::utf16To8(text_list2[0]) << " is similar to...\n";
-    for (int i = 0; i < result.size(); i++) {
+    for (int i = 0; i < (int)result.size(); i++) {
         cout << (i + 1) << ' ' << kiwi::utf16To8(text_list2[result[i].first]) << ", score : " << result[i].second << '\n';
     }
 
@@ -56,7 +56,7 @@ int main(){
     result.clear();
     tr.GetRankingList(0, 3, result);
     cout << kiwi::utf16To8(text_list2[0]) << " is similar to...\n";
-    for (int i = 0; i < result.size(); i++) {
+    for (int i = 0; i < (int)result.size(); i++) {
         cout << (i + 1) << ' ' << kiwi::utf16To8(text_list2[result[i].first]) << ", score : " << result[i].second << '\n';
     }
 }

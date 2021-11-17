@@ -54,7 +54,7 @@ namespace cbr {
         void AddData(const std::u16string& text);
         void Build(std::string policy="tf-idf");
         void SetConfig(const std::vector<std::pair<std::string, std::string>>& config);
-        void ReSetConfig();
+        void ResetConfig();
         void ResetData();
         void GetRankingList(int id, int k, std::vector<int>& result);
         void GetRankingList(int id, int k, std::vector<std::pair<int, double>>& result);
