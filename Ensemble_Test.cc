@@ -4,7 +4,7 @@
 using namespace std;
 
 int main(){
-    Ensemble en;
+    cbr::Ensemble en;
     en.AddRanking({1, 4, 2, 3, 7, 6, 5});
     en.AddRanking({2, 3, 1, 4, 6, 5, 7});
     en.AddRanking({1, 4, 2, 5, 3, 6, 7});

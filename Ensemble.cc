@@ -1,13 +1,13 @@
 #include "Ensemble.h"
 #include <iostream>
 
-Ensemble::Ensemble() : ranking_list(), ranking_list_with_weight() {}
+cbr::Ensemble::Ensemble() : ranking_list(), ranking_list_with_weight() {}
 
-void Ensemble::AddRanking(std::vector<int> ranking) {
+void cbr::Ensemble::AddRanking(std::vector<int> ranking) {
     ranking_list.push_back(ranking);
 }
 
-void Ensemble::AddRanking(std::vector<std::pair<int, double>> ranking, bool is_similarity) {
+void cbr::Ensemble::AddRanking(std::vector<std::pair<int, double>> ranking, bool is_similarity) {
     if (is_similarity) ranking_list_with_weight.push_back(ranking);
     else {
         for (auto &i : ranking) {
@@ -16,13 +16,13 @@ void Ensemble::AddRanking(std::vector<std::pair<int, double>> ranking, bool is_s
     }
 }
 
-void Ensemble::GetResult(int k, std::string policy, std::vector<int>& result) {
+void cbr::Ensemble::GetResult(int k, std::string policy, std::vector<int>& result) {
     if (policy == "RRF") ReciprocalRankFusion(k, result);
     else if (policy == "CombMNZ") CombMNZ(k, result);
     else if (policy == "CombSum") CombSum(k, result);
 }
 
-void Ensemble::ReciprocalRankFusion(int k, std::vector<int>& result) {
+void cbr::Ensemble::ReciprocalRankFusion(int k, std::vector<int>& result) {
     const int K = 60; //K=60은 선행연구에서 정해진 값
     std::map<int, double> rrf_score;
     for (auto ranking : ranking_list) {
@@ -45,7 +45,7 @@ void Ensemble::ReciprocalRankFusion(int k, std::vector<int>& result) {
     }
 }
 
-void Ensemble::CombMNZ(int k, std::vector<int>& result) {
+void cbr::Ensemble::CombMNZ(int k, std::vector<int>& result) {
     const int K = 60;
     std::map<int, double> sim_score;
     std::map<int, int> num_nonzero_score;
@@ -73,7 +73,7 @@ void Ensemble::CombMNZ(int k, std::vector<int>& result) {
     }
 }
 
-void Ensemble::CombSum(int k, std::vector<int>& result) {
+void cbr::Ensemble::CombSum(int k, std::vector<int>& result) {
     const int K = 60;
     std::map<int, double> sim_score;
     for (const auto& ranking : ranking_list_with_weight) {
