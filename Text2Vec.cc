@@ -67,63 +67,6 @@ std::vector<std::string> cbr::split(const std::string& text, std::vector<std::st
     return ret;
 }
 
-std::u16string cbr::filter(const std::u16string& s, const std::vector<std::string>& seperators) {
-    std::string text = kiwi::utf16To8(s);
-    std::string ret, tmp;
-    int i = 0;
-    while (i < (int)text.size()) {
-        int char_sz = 0;
-
-        if ((text[i] & 0b11111000) == 0b11110000) {
-            if (i+3 < (int)text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000 && (text[i+3] & 0b11000000) == 0b10000000)
-                char_sz = 4;
-            else {
-                i++; continue;
-            }
-        }
-        else if ((text[i] & 0b11110000) == 0b11100000) {
-            if (i+2 < (int)text.size() && (text[i+1] & 0b11000000) == 0b10000000 && (text[i+2] & 0b11000000) == 0b10000000)
-                char_sz = 3;    
-            else {
-                i++; continue;
-            }
-        }
-        else if ((text[i] & 0b11100000) == 0b11000000) {
-            if (i+1 < (int)text.size() && (text[i+1] & 0b11000000) == 0b10000000)
-                char_sz = 2;
-            else {
-                i++;
-                continue;
-            }
-        }
-        else if ((text[i] & 0b10000000) == 0b00000000) char_sz = 1;
-        else {
-            i++; continue;
-        }
-
-        std::string str = text.substr(i, char_sz);
-        i += char_sz;
-        bool flag = 0;
-        for (std::string sep : seperators) 
-            if (str == sep) {
-                flag = 1; break;
-            }
-
-        if (flag) {
-            if (tmp.size()) {
-                ret += tmp;
-                ret += " ";
-            }
-            tmp.clear();
-            continue;
-        }
-
-        tmp += str;
-    }
-    if (tmp.size()) ret += tmp;
-    return kiwi::utf8To16(ret);
-}
-
 void cbr::TfidfVectorizer::set_configs(const std::vector<std::pair<std::string, std::string>>& config) {
     for (auto c : config) {
         if (c.first == "max_features") max_features = stoi(c.second);
@@ -141,8 +84,7 @@ void cbr::TfidfVectorizer::fit(const std::vector<std::u16string>& text_list) {
     std::vector<std::string> punc_vec = split(punctuation, {}, false);
     kiwi::Kiwi kiwi = kiwi::KiwiBuilder(MODEL_PATH).build();
     for (const std::u16string& text : text_list) {
-        auto filtered_text = filter(text, punc_vec);
-        auto parsed_text = kiwi.analyze(filtered_text, kiwi::Match::all).first;
+        auto parsed_text = kiwi.analyze(text, kiwi::Match::all).first;
         std::map<std::u16string, int> word_count;
         for (int ngram = ngram_range.first; ngram <= ngram_range.second; ngram++) {
             for (int i = 0; i < (int)parsed_text.size() - ngram + 1; i++) {
@@ -195,11 +137,8 @@ std::vector<std::vector<double>> cbr::TfidfVectorizer::transform() {
     for (int i = 0; i < (int)tf.size(); i++) {
         std::vector<double> tmp;
         for (auto j : df) {
-            if (tf[i].find(j.first) == tf[i].end()) tmp.push_back(0);
-            else {
-                double idf = log((double)tf.size() / (j.second + 1));
-                tmp.push_back(tf[i][j.first] * idf);
-            }
+            double idf = log((double)tf.size() / (j.second + 1));
+            tmp.push_back(tf[i][j.first] * idf);
         }
         ret.push_back(tmp);
     }

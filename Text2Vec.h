@@ -18,8 +18,6 @@ namespace cbr {
     const std::string MODEL_PATH = "../Kiwi/ModelGenerator";
 
     std::vector<std::string> split(const std::string& text, std::vector<std::string> seperators, bool word_unit=true);
-    std::u16string filter(const std::u16string& s, const std::vector<std::string>& seperators);
-
 
     class TfidfVectorizer {
     private:
