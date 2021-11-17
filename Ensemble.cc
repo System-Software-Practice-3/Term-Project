@@ -11,8 +11,9 @@ void cbr::Ensemble::AddRanking(std::vector<std::pair<int, double>> ranking, bool
     if (is_similarity) ranking_list_with_weight.push_back(ranking);
     else {
         for (auto &i : ranking) {
-            i.second = 1.0 / (1 + i.second);
+            i.second = 1.0 / (2 + i.second);
         }
+        ranking_list_with_weight.push_back(ranking);
     }
 }
 
