@@ -1,4 +1,4 @@
-#include "Tag2Vec.h"
+#include "TagRec.h"
 #include "../Knn/Knn.h"
 
 #include <iostream>
@@ -9,7 +9,7 @@
 int main(void){
     using namespace cbr;
     
-    Tag2Vec test;
+    TagRec test;
     
     std::string test1 = "사과,배,포도,";
     std::string test2 = "포도,딸기,파인애플,";
@@ -42,22 +42,10 @@ int main(void){
    
     std::cout << "--------------------------" <<std::endl;
 
-    Knn fortest(1, "Jaccard");
-
     std::vector<std::pair<int, double>> ret;
     ret.clear();
 
-    std::set<std::string> test_vec;
-
-    test_vec.clear();
-    test_vec.insert("사과");
-    test_vec.insert("포도");
-
-    std::cout << "target : 사과 포도" << std::endl;
-
-    fortest.AddData(tag_table);
-
-    fortest.SearchByVector(test_vec, 2, ret);
+    test.GetRankingList(0, 1, ret);
 
     for(size_t i =0;i<ret.size();i++){
         std::cout << "ID : " <<ret.at(i).first <<" distance : " << ret.at(i).second << std::endl;

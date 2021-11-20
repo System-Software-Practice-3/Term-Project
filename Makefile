@@ -2,21 +2,21 @@ CC = g++
 
 CFLAGS = -std=c++11 -g 
 
-TARGET = Tag2Vec_test.out
-OBJS = Tag2Vec_test.o Tag2Vec.o Knn.o
+TARGET = TagRec_test.out
+OBJS = TagRec_test.o TagRec.o Knn.o
 
 $(TARGET) : $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
-Tag2Vec_test.o : Tag2Vec_test.cc
+TagRec_test.o : TagRec_test.cc
 	$(CC) $(CFLAGS) -c $<
 
-Tag2Vec.o : Tag2Vec.cc
+TagRec.o : TagRec.cc
 	$(CC) $(CFLAGS) -c $<
 
 Knn.o : ../Knn/Knn.cc
 	$(CC) $(CFLAGS) -c $<
 
 clean :
-	rm -f *.o Tag2Vec_test.out
+	rm -f *.o TagRec_test.out
 
