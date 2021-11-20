@@ -12,11 +12,11 @@
 #include <kiwi/Utils.h>
 #include <kiwi/Kiwi.h>
 
-#include "Knn.h"
-#include "ItemRec.cc"
+#include "../Knn/Knn.h"
+#include "../ItemRec.cc"
 
 namespace cbr {
-    const std::string MODEL_PATH = "../Kiwi/ModelGenerator";
+    const std::string MODEL_PATH = "/home/ssw3-team2/Kiwi/ModelGenerator"; //must absolute path
 
     std::vector<std::string> split(const std::string& text, std::vector<std::string> seperators, bool word_unit=true);
 

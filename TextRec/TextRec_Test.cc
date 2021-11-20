@@ -1,10 +1,10 @@
 #include <iostream>
 #include <locale>
-#include "Text2Vec.h"
+#include "TextRec.h"
 using namespace std;
 
 int main(){
-    // Text2Vec_Test.cc file should be encoded by utf-8
+    // TextRec_Test.cc file should be encoded by utf-8
     // C++11
     u16string text = u"이 글은 ★Test★를 위한 글입니다. 잘 읽힐까요?";
     cout << kiwi::utf16To8(text) << '\n';

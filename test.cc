@@ -6,11 +6,11 @@
 #include <locale>
 #include <kiwi/Kiwi.h>
 
-#include "Text2Vec.h"
-#include "Ensemble.h"
+#include "TextRec/TextRec.h"
+#include "Ensemble/Ensemble.h"
 using namespace std;
 
-const string BOOK_PATH = "/mnt/c/Users/user/Desktop/SSW3/book_text";
+const string BOOK_PATH = "/home/ssw3-team2/book_text"; //absolute path
 const int MAX_BOOK = 100;
 
 int main(){
