@@ -30,7 +30,6 @@ namespace cbr {
 
     public:
         TfidfVectorizer();
-        TfidfVectorizer(int _max_features);
 
         void set_configs(const std::vector<std::pair<std::string, std::string>>& config);
         void fit(const std::vector<std::u16string>& text_list);

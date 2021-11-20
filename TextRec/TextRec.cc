@@ -80,8 +80,6 @@ void cbr::TfidfVectorizer::set_configs(const std::vector<std::pair<std::string, 
 }
 
 void cbr::TfidfVectorizer::fit(const std::vector<std::u16string>& text_list) {
-    std::string punctuation = u8"!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n";
-    std::vector<std::string> punc_vec = split(punctuation, {}, false);
     kiwi::Kiwi kiwi = kiwi::KiwiBuilder(MODEL_PATH).build();
     for (const std::u16string& text : text_list) {
         auto parsed_text = kiwi.analyze(text, kiwi::Match::all).first;
@@ -94,9 +92,9 @@ void cbr::TfidfVectorizer::fit(const std::vector<std::u16string>& text_list) {
                     if (j != ngram - 1) word += u" ";
                 }
                 word_count[word]++;
-                df[word]++;
             }
         }
+        for (auto word : word_count) df[word.first]++;
         tf.push_back(word_count);
     }
     if (min_df != -1) {
