@@ -1,9 +1,9 @@
 CC = g++
 CXXFLAGS = -std=c++11 -g -O2 -Wall
-OBJS = TextRec.o Knn.o Ensemble.o test.o
-SRCS = TextRec/TextRec.cc Knn/Knn.cc Ensemble/Ensemble.cc test.cc
+OBJS = TextRec.o Knn.o RankFusion.o test_TextRec_Ensemble.o
+SRCS = TextRec/TextRec.cc Knn/Knn.cc RankFusion/RankFusion.cc test_TextRec_Ensemble.cc
 LIB = -L ~/Kiwi/build -lkiwi
-TARGET = Test.out
+TARGET = Test_TextRec_Ensemble.out
 
 $(TARGET) : $(OBJS)
 	$(CC) -o $(TARGET) $(CXXFLAGS) $(OBJS) $(LIB)

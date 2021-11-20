@@ -7,7 +7,7 @@
 #include <kiwi/Kiwi.h>
 
 #include "TextRec/TextRec.h"
-#include "Ensemble/Ensemble.h"
+#include "RankFusion/RankFusion.h"
 using namespace std;
 
 const string BOOK_PATH = "/home/ssw3-team2/book_text"; //absolute path
@@ -53,12 +53,12 @@ int main(){
         cout << titles[idx] << ' ' << idx + 1  << ' ' << result2[i].second << '\n';
     }
 
-    cbr::Ensemble en;
+    cbr::RankFusion en;
     en.AddRanking(result1);
     en.AddRanking(result2);
     en.GetResult(20, "CombSum", final_result);
 
-    cout << "Ensemble Result : \n";
+    cout << "RankFusion Result : \n";
     for (int i = 0; i < 20; i++) {
         int idx = final_result[i];
         cout << i + 1 << ". ";
