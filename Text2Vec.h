@@ -13,6 +13,7 @@
 #include <kiwi/Kiwi.h>
 
 #include "Knn.h"
+#include "ItemRec.cc"
 
 namespace cbr {
     const std::string MODEL_PATH = "../Kiwi/ModelGenerator";
@@ -39,7 +40,7 @@ namespace cbr {
         std::vector<std::map<std::u16string, int>> get_tf() const;
     };
 
-    class TextRec {
+    class TextRec : public ItemRec<std::u16string> {
     private:
         std::vector<std::u16string> text_list;
         std::vector<std::vector<double>> vectorized_text_list;
@@ -49,13 +50,13 @@ namespace cbr {
 
     public:
         void AddData(const std::string& text);
-        void AddData(const std::u16string& text);
-        void Build(std::string policy="tf-idf");
-        void SetConfig(const std::vector<std::pair<std::string, std::string>>& config);
+        void AddData(const std::u16string& text) override;
+        void Build(std::string policy="tf-idf") override;
+        void SetConfig(const std::vector<std::pair<std::string, std::string>>& config) override;
         void ResetConfig();
         void ResetData();
-        void GetRankingList(int id, int k, std::vector<int>& result);
-        void GetRankingList(int id, int k, std::vector<std::pair<int, double>>& result);
+        void GetRankingList(int id, int k, std::vector<int>& result) override;
+        void GetRankingList(int id, int k, std::vector<std::pair<int, double>>& result) override;
     };
 }
 
