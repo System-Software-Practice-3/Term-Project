@@ -39,10 +39,16 @@ namespace cbr {
             if(text.at(i) != ','){
                 temp += text.at(i);
             } else if(text.at(i) == ',' || text.at(i) == '\n'){
-                ret.insert(temp);
-                temp.clear();
+                if(!temp.empty()){
+                    ret.insert(temp);
+                    temp.clear();
+                }
             }
             i++;
+        }
+
+        if(!temp.empty()){
+            ret.insert(temp);
         }
 
         return ret;
