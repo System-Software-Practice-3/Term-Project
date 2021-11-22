@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include <set>
-#include "ItemRec.cc"
+#include "../ItemRec.cc"
 #include "../Knn/Knn.h"
 
 namespace cbr{
