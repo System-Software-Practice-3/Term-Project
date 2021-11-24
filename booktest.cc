@@ -45,10 +45,10 @@ int main(){
 
     tr.SetConfig({{"ngram_range", "{1, 2}"}});
     tr.Build("tf-idf");
-    tr.GetRankingList(target - 1, MAX_BOOK, result1);
+    tr.GetRankingList(target - 1, MAX_BOOK-1, result1);
 
     tr.Build("jaccard");
-    tr.GetRankingList(target - 1, MAX_BOOK, result2);
+    tr.GetRankingList(target - 1, MAX_BOOK-1, result2);
 
 ////////////////////////
     std::ifstream TAG_ifs;
@@ -64,7 +64,7 @@ int main(){
         TAG_ifs.close();
     }
 
-    tag.GetRankingList(target-1, MAX_BOOK, result3);
+    tag.GetRankingList(target-1, MAX_BOOK-1, result3);
 //////////////////////////////
     std::vector<std::pair<int, double>> result4;
     ImageRec analyze_histogram = ImageRec(1,5); // second arg is cluster number and we fix  it 5
