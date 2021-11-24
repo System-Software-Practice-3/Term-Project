@@ -1,0 +1,3 @@
+/home/rumoe/Term-Project/CMakeFiles/rebuild_cache.dir
+/home/rumoe/Term-Project/CMakeFiles/Term-Project.dir
+/home/rumoe/Term-Project/CMakeFiles/edit_cache.dir
