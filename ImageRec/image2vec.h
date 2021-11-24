@@ -2,7 +2,7 @@
 #define IMGTVEC
 
 #include "MYopencv.h"
-#include "ItemRec.cc"
+#include "../ItemRec.cc"
 #include <string>
 namespace cbr{
     class img2RGB{

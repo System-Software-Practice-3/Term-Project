@@ -24,9 +24,5 @@ int main(void){
 
     tag.GetRankingList(id, k, result);
 
-    for(size_t i = 0;i<result.size();i++){
-        std::cout << i+1 <<". id : " << result.at(i).first+1 << ".csv " << "distance" << " " << result.at(i).second << std::endl;
-    }
-
     return 0;
 }

@@ -1,3 +1,8 @@
+#ifndef ItemRecCC
+#define ItemRecCC
+#include <vector>
+#include <string>
+#include <utility>
 namespace cbr {
     template <typename T>
     class ItemRec {
@@ -8,3 +13,4 @@ namespace cbr {
         virtual void GetRankingList(int id, int k, std::vector<std::pair<int, double>>& result) {}
     };
 }
+#endif
