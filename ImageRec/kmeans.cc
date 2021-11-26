@@ -276,7 +276,7 @@ std::vector<std::pair<int,double>> kmeans_similarity(img2RGB input,std::vector<i
     std::vector<std::pair<int,double>> ret;
     if(choose_num > len) choose_num = len;
     for (int i = 1; i <= choose_num; i++){
-        ret.push_back(std::make_pair(tmp_stored_picture[i].get_id(),similar[i]));
+        ret.push_back(std::make_pair(tmp_stored_picture[i].get_id(),(-1)*similar[i]));
     }
 
     return ret;
